@@ -45,9 +45,9 @@ class Agent:
         gameTree = MyTree(board, self.color, self.opponentColor, self.height)
         from_cell, to_cell = Minimax.calNextMove(gameTree, self.height)
 
-        newBoard = copy.deepcopy(board)
-        newBoard.changePieceLocation(self.color, from_cell, to_cell)
+        #newBoard = copy.deepcopy(board)
+        #newBoard.changePieceLocation(self.color, from_cell, to_cell)
 
-        print(evaluate_board(newBoard))
+        #print(evaluate_board(newBoard))
 
         return from_cell, to_cell
