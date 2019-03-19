@@ -22,16 +22,6 @@ def evaluate_board(board,n_rows,mycolor):
                     evaluated -= WIN_SCORE
     return evaluated
 
-class MyNode(Node):
-    def setEvaluationFunction(self):
-        evaluation = evaluate_board(self.board.board,self.board.n_rows)
-        self.utility = evaluation
-
-class MyTree(Tree):
-    def makeNode(self, height, board, from_cell=None, to_cell=None):
-        node = MyNode(from_cell, to_cell, board)
-        self.nodes[height].append(node)
-        return node
 class AlphaBeta:
     INFINITY  = 100000
     def __init__(self,color, opponentColor):
@@ -58,7 +48,7 @@ class AlphaBeta:
                                         move_backup = board[i+x_move][j+y_move]
                                         board[i+x_move][j+y_move] = turn_color
                                         board[i][j] = 'E'
-                                        #MIN MAX
+                                        #BEGIN
                                         if is_it_maximizer:
                                             if height == 1:
                                                 val = evaluate_board(board,n_rows,self.color)
@@ -80,7 +70,7 @@ class AlphaBeta:
                                                 beta = val
                                                 if beta <= alpha:
                                                     ret_flag = True
-                                        #MIN MAX END
+                                        #END
                                         board[i+x_move][j+y_move] = move_backup
                                         board[i][j] = turn_color
                                         if ret_flag:
@@ -97,9 +87,4 @@ class Agent:
         self.myAlphaBeta = AlphaBeta(color,opponentColor)
     def move(self,board):
         from_cell,to_cell = self.myAlphaBeta.getNextMove(self.height,board.board,board.n_rows,board.n_cols)
-        # newBoard = copy.deepcopy(board)
-        # newBoard.changePieceLocation(self.color, from_cell, to_cell)
-        #
-        # print(evaluate_board(newBoard.board,board.n_rows))
-
         return from_cell, to_cell
