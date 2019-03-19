@@ -6,11 +6,9 @@ from minimax import Minimax
 POWER_OF_DISTANCE = 2
 WIN_SCORE         = 1000
 INFINITY          = 100000
-mycolor = 'E'
-opcolor = 'E'
 
-def evaluate_board(board,n_rows):
-    global mycolor,POWER_OF_DISTANCE,WIN_SCORE
+def evaluate_board(board,n_rows,mycolor):
+    global POWER_OF_DISTANCE,WIN_SCORE
     evaluated = 0
     for i in range(n_rows):
         for cell in board[i]:
@@ -36,16 +34,17 @@ class MyTree(Tree):
         return node
 class AlphaBeta:
     INFINITY  = 100000
-    @staticmethod
-    def getNextMove(height,board,n_rows,n_cols,is_it_maximizer = True,is_it_first = True,alpha = -INFINITY,beta = INFINITY):
-        global mycolor,opcolor
-        turn_color = mycolor if is_it_maximizer else opcolor
+    def __init__(self,color, opponentColor):
+        self.color = color
+        self.opponentColor = opponentColor
+    def getNextMove(self,height,board,n_rows,n_cols,is_it_maximizer = True,is_it_first = True,alpha = -INFINITY,beta = INFINITY):
+        turn_color = self.color if is_it_maximizer else self.opponentColor
         x_move = 1 if turn_color == 'W' else -1
         ret_flag = False
         if 'B' in board[0]:
-            return evaluate_board(board,n_rows)*height
+            return evaluate_board(board,n_rows,self.color)*height
         if 'W' in board[-1]:
-            return evaluate_board(board,n_rows)*height
+            return evaluate_board(board,n_rows,self.color)*height
         for i in range(n_rows):
             for j in range(n_cols):
                 if(board[i][j] == turn_color):
@@ -62,9 +61,9 @@ class AlphaBeta:
                                         #MIN MAX
                                         if is_it_maximizer:
                                             if height == 1:
-                                                val = evaluate_board(board,n_rows)
+                                                val = evaluate_board(board,n_rows,self.color)
                                             else:
-                                                val = AlphaBeta.getNextMove(height-1,board,n_rows,n_cols,False,False,alpha = alpha)
+                                                val = self.getNextMove(height-1,board,n_rows,n_cols,False,False,alpha = alpha)
                                             if val > alpha:
                                                 alpha = val
                                                 if is_it_first:
@@ -74,9 +73,9 @@ class AlphaBeta:
                                                     ret_flag = True
                                         else:
                                             if height == 1:
-                                                val = evaluate_board(board,n_rows)
+                                                val = evaluate_board(board,n_rows,self.color)
                                             else:
-                                                val = AlphaBeta.getNextMove(height-1,board,n_rows,n_cols,True,False,beta = beta)
+                                                val = self.getNextMove(height-1,board,n_rows,n_cols,True,False,beta = beta)
                                             if val < beta:
                                                 beta = val
                                                 if beta <= alpha:
@@ -92,15 +91,12 @@ class AlphaBeta:
             return from_cell,to_cell
 class Agent:
     def __init__(self, color, opponentColor, time=None):
-        global mycolor,opcolor
-        mycolor = color
-        opcolor = opponentColor
         self.color = color
         self.opponentColor = opponentColor
         self.height = 4
-
+        self.myAlphaBeta = AlphaBeta(color,opponentColor)
     def move(self,board):
-        from_cell,to_cell = AlphaBeta.getNextMove(self.height,board.board,board.n_rows,board.n_cols)
+        from_cell,to_cell = self.myAlphaBeta.getNextMove(self.height,board.board,board.n_rows,board.n_cols)
         # newBoard = copy.deepcopy(board)
         # newBoard.changePieceLocation(self.color, from_cell, to_cell)
         #
