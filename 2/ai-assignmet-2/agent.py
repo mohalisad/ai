@@ -41,44 +41,53 @@ class AlphaBeta:
         global mycolor,opcolor
         turn_color = mycolor if is_it_maximizer else opcolor
         x_move = 1 if turn_color == 'W' else -1
+        ret_flag = False
+        if 'B' in board[0]:
+            return evaluate_board(board,n_rows)*height
+        if 'W' in board[-1]:
+            return evaluate_board(board,n_rows)*height
         for i in range(n_rows):
             for j in range(n_cols):
                 if(board[i][j] == turn_color):
                     if 0<=i+x_move<n_rows:
                         for y_move in range(-1,2):
                             if 0<=j+y_move<n_rows:
-                                if y_move == 0 and board[i+x_move][j+y_move] != 'E':
-                                    pass
-                                else:
-                                    move_backup = board[i+x_move][j+y_move]
-                                    board[i+x_move][j+y_move] = turn_color
-                                    board[i][j] = 'E'
-                                    #MIN MAX
-                                    if is_it_maximizer:
-                                        if height == 1:
-                                            alpha = max(alpha,evaluate_board(board,n_rows))
-                                        else:
-                                            val = AlphaBeta.getNextMove(height-1,board,n_rows,n_cols,False,False)
+                                if board[i+x_move][j+y_move] != turn_color:
+                                    if y_move == 0 and board[i+x_move][j+y_move] != 'E':
+                                        pass
+                                    else:
+                                        move_backup = board[i+x_move][j+y_move]
+                                        board[i+x_move][j+y_move] = turn_color
+                                        board[i][j] = 'E'
+                                        #MIN MAX
+                                        if is_it_maximizer:
+                                            if height == 1:
+                                                val = evaluate_board(board,n_rows)
+                                            else:
+                                                val = AlphaBeta.getNextMove(height-1,board,n_rows,n_cols,False,False,alpha = alpha)
                                             if val > alpha:
                                                 alpha = val
-                                                from_cell = i,j
-                                                to_cell = i+x_move,j+y_move
-                                    else:
-                                        if height == 1:
-                                            beta = min(beta,evaluate_board(board,n_rows))
+                                                if is_it_first:
+                                                    from_cell = i,j
+                                                    to_cell = i+x_move,j+y_move
+                                                if beta <= alpha:
+                                                    ret_flag = True
                                         else:
-                                            val = AlphaBeta.getNextMove(height-1,board,n_rows,n_cols,True,False)
+                                            if height == 1:
+                                                val = evaluate_board(board,n_rows)
+                                            else:
+                                                val = AlphaBeta.getNextMove(height-1,board,n_rows,n_cols,True,False,beta = beta)
                                             if val < beta:
                                                 beta = val
-                                                ret_x,ret_y = i+x_move,j+y_move
-                                    #MIN MAX END
-                                    board[i+x_move][j+y_move] = move_backup
-                                    board[i][j] = turn_color
+                                                if beta <= alpha:
+                                                    ret_flag = True
+                                        #MIN MAX END
+                                        board[i+x_move][j+y_move] = move_backup
+                                        board[i][j] = turn_color
+                                        if ret_flag:
+                                            return alpha if is_it_maximizer else beta
         if not is_it_first:
-            if is_it_maximizer:
-                return alpha
-            else:
-                return beta
+            return alpha if is_it_maximizer else beta
         else:
             return from_cell,to_cell
 class Agent:
@@ -88,13 +97,13 @@ class Agent:
         opcolor = opponentColor
         self.color = color
         self.opponentColor = opponentColor
-        self.height = 3
+        self.height = 4
 
     def move(self,board):
-        from_cell,to_cell = AlphaBeta.getNextMove(self.height-1,board.board,board.n_rows,board.n_cols)
-        #newBoard = copy.deepcopy(board)
-        #newBoard.changePieceLocation(self.color, from_cell, to_cell)
-
-        #print(evaluate_board(newBoard))
+        from_cell,to_cell = AlphaBeta.getNextMove(self.height,board.board,board.n_rows,board.n_cols)
+        # newBoard = copy.deepcopy(board)
+        # newBoard.changePieceLocation(self.color, from_cell, to_cell)
+        #
+        # print(evaluate_board(newBoard.board,board.n_rows))
 
         return from_cell, to_cell
