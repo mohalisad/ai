@@ -9,24 +9,24 @@ INFINITY          = 100000
 mycolor = 'E'
 opcolor = 'E'
 
-def evaluate_board(board):
+def evaluate_board(board,n_rows):
     global mycolor,POWER_OF_DISTANCE,WIN_SCORE
     evaluated = 0
-    for i in range(board.n_rows):
-        for cell in board.board[i]:
+    for i in range(n_rows):
+        for cell in board[i]:
             if cell == mycolor:
-                evaluated += (board.n_rows-i)**POWER_OF_DISTANCE
+                evaluated += (n_rows-i)**POWER_OF_DISTANCE
                 if i == 0:
                     evaluated += WIN_SCORE
             elif cell != 'E':
                 evaluated -= (i+1)**POWER_OF_DISTANCE
-                if i == board.n_rows-1:
+                if i == n_rows-1:
                     evaluated -= WIN_SCORE
     return evaluated
 
 class MyNode(Node):
     def setEvaluationFunction(self):
-        evaluation = evaluate_board(self.board)
+        evaluation = evaluate_board(self.board.board,self.board.n_rows)
         self.utility = evaluation
 
 class MyTree(Tree):
@@ -37,9 +37,8 @@ class MyTree(Tree):
 class AlphaBeta:
     INFINITY  = 100000
     @staticmethod
-    def getNextMove(height,board,n_rows,n_cols,is_it_maximizer = True,alpha = -INFINITY,beta = INFINITY):
+    def getNextMove(height,board,n_rows,n_cols,is_it_maximizer = True,is_it_first = True,alpha = -INFINITY,beta = INFINITY):
         global mycolor,opcolor
-        move_backup = 'E'
         turn_color = mycolor if is_it_maximizer else opcolor
         x_move = 1 if turn_color == 'W' else -1
         for i in range(n_rows):
@@ -54,9 +53,34 @@ class AlphaBeta:
                                     move_backup = board[i+x_move][j+y_move]
                                     board[i+x_move][j+y_move] = turn_color
                                     board[i][j] = 'E'
-                                    #Complete In Here
+                                    #MIN MAX
+                                    if is_it_maximizer:
+                                        if height == 1:
+                                            alpha = max(alpha,evaluate_board(board,n_rows))
+                                        else:
+                                            val = AlphaBeta.getNextMove(height-1,board,n_rows,n_cols,False,False)
+                                            if val > alpha:
+                                                alpha = val
+                                                from_cell = i,j
+                                                to_cell = i+x_move,j+y_move
+                                    else:
+                                        if height == 1:
+                                            beta = min(beta,evaluate_board(board,n_rows))
+                                        else:
+                                            val = AlphaBeta.getNextMove(height-1,board,n_rows,n_cols,True,False)
+                                            if val < beta:
+                                                beta = val
+                                                ret_x,ret_y = i+x_move,j+y_move
+                                    #MIN MAX END
                                     board[i+x_move][j+y_move] = move_backup
                                     board[i][j] = turn_color
+        if not is_it_first:
+            if is_it_maximizer:
+                return alpha
+            else:
+                return beta
+        else:
+            return from_cell,to_cell
 class Agent:
     def __init__(self, color, opponentColor, time=None):
         global mycolor,opcolor
@@ -67,10 +91,7 @@ class Agent:
         self.height = 3
 
     def move(self,board):
-        AlphaBeta.getNextMove(self.height,board.board,board.n_rows,board.n_cols)
-        gameTree = MyTree(board, self.color, self.opponentColor, self.height)
-        from_cell, to_cell = Minimax.calNextMove(gameTree, self.height)
-
+        from_cell,to_cell = AlphaBeta.getNextMove(self.height-1,board.board,board.n_rows,board.n_cols)
         #newBoard = copy.deepcopy(board)
         #newBoard.changePieceLocation(self.color, from_cell, to_cell)
 
