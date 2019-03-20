@@ -1,11 +1,6 @@
-import copy
-from node import Node
-from tree import Tree
-from minimax import Minimax
-
 POWER_OF_DISTANCE = 2
 WIN_SCORE         = 1000
-INFINITY          = 100000
+INFINITY  = 100000
 
 def evaluate_board(board,n_rows,mycolor):
     global POWER_OF_DISTANCE,WIN_SCORE
@@ -23,12 +18,12 @@ def evaluate_board(board,n_rows,mycolor):
     return evaluated
 
 class AlphaBeta:
-    INFINITY  = 100000
     def __init__(self,color, opponentColor):
         self.color = color
         self.opponentColor = opponentColor
     def getNextMove(self,height,board,n_rows,n_cols,is_it_maximizer = True,is_it_first = True,alpha = -INFINITY,beta = INFINITY):
         turn_color = self.color if is_it_maximizer else self.opponentColor
+        best = -INFINITY if is_it_maximizer else INFINITY
         x_move = 1 if turn_color == 'W' else -1
         ret_flag = False
         if 'B' in board[0]:
@@ -53,9 +48,10 @@ class AlphaBeta:
                                             if height == 1:
                                                 val = evaluate_board(board,n_rows,self.color)
                                             else:
-                                                val = self.getNextMove(height-1,board,n_rows,n_cols,False,False,alpha = alpha)
-                                            if val > alpha:
-                                                alpha = val
+                                                val = self.getNextMove(height-1,board,n_rows,n_cols,False,False,alpha = alpha,beta = beta)
+                                            if val > best:
+                                                best  = val
+                                                alpha = max(alpha,best)
                                                 if is_it_first:
                                                     from_cell = i,j
                                                     to_cell = i+x_move,j+y_move
@@ -65,9 +61,10 @@ class AlphaBeta:
                                             if height == 1:
                                                 val = evaluate_board(board,n_rows,self.color)
                                             else:
-                                                val = self.getNextMove(height-1,board,n_rows,n_cols,True,False,beta = beta)
-                                            if val < beta:
-                                                beta = val
+                                                val = self.getNextMove(height-1,board,n_rows,n_cols,True,False,alpha = alpha,beta = beta)
+                                            if val < best:
+                                                best = val
+                                                beta = min(beta,best)
                                                 if beta <= alpha:
                                                     ret_flag = True
                                         #END
