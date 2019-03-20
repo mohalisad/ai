@@ -83,7 +83,7 @@ class Agent:
     def __init__(self, color, opponentColor, time=None):
         self.color = color
         self.opponentColor = opponentColor
-        self.height = 4
+        self.height = 5
         self.myAlphaBeta = AlphaBeta(color,opponentColor)
     def move(self,board):
         from_cell,to_cell = self.myAlphaBeta.getNextMove(self.height,board.board,board.n_rows,board.n_cols)
