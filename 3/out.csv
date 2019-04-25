@@ -1,4 +1,4 @@
-id,text
+id,type
 1,ham
 2,ham
 3,spam
@@ -73,7 +73,7 @@ id,text
 72,ham
 73,ham
 74,ham
-75,spam
+75,ham
 76,spam
 77,ham
 78,ham
@@ -120,7 +120,7 @@ id,text
 119,ham
 120,spam
 121,spam
-122,spam
+122,ham
 123,spam
 124,ham
 125,ham
@@ -131,11 +131,11 @@ id,text
 130,ham
 131,ham
 132,ham
-133,spam
+133,ham
 134,spam
 135,spam
 136,ham
-137,spam
+137,ham
 138,ham
 139,spam
 140,ham
@@ -147,11 +147,11 @@ id,text
 146,ham
 147,spam
 148,ham
-149,spam
+149,ham
 150,ham
 151,ham
 152,ham
-153,spam
+153,ham
 154,ham
 155,ham
 156,ham
@@ -163,7 +163,7 @@ id,text
 162,ham
 163,ham
 164,spam
-165,ham
+165,spam
 166,ham
 167,spam
 168,ham
@@ -177,8 +177,8 @@ id,text
 176,ham
 177,ham
 178,ham
-179,spam
-180,spam
+179,ham
+180,ham
 181,ham
 182,ham
 183,ham
@@ -203,7 +203,7 @@ id,text
 202,ham
 203,ham
 204,ham
-205,spam
+205,ham
 206,ham
 207,ham
 208,ham
@@ -226,7 +226,7 @@ id,text
 225,spam
 226,ham
 227,spam
-228,spam
+228,ham
 229,ham
 230,ham
 231,ham
@@ -279,7 +279,7 @@ id,text
 278,ham
 279,ham
 280,ham
-281,spam
+281,ham
 282,ham
 283,ham
 284,ham
@@ -293,7 +293,7 @@ id,text
 292,ham
 293,ham
 294,ham
-295,spam
+295,ham
 296,spam
 297,ham
 298,ham
@@ -327,7 +327,7 @@ id,text
 326,spam
 327,ham
 328,ham
-329,spam
+329,ham
 330,ham
 331,ham
 332,ham
@@ -344,7 +344,7 @@ id,text
 343,ham
 344,ham
 345,ham
-346,spam
+346,ham
 347,ham
 348,ham
 349,spam
@@ -368,7 +368,7 @@ id,text
 367,spam
 368,spam
 369,ham
-370,spam
+370,ham
 371,ham
 372,ham
 373,ham
@@ -384,7 +384,7 @@ id,text
 383,ham
 384,ham
 385,spam
-386,spam
+386,ham
 387,spam
 388,ham
 389,spam
@@ -394,7 +394,7 @@ id,text
 393,ham
 394,ham
 395,ham
-396,ham
+396,spam
 397,ham
 398,ham
 399,ham
@@ -432,7 +432,7 @@ id,text
 431,ham
 432,ham
 433,spam
-434,spam
+434,ham
 435,ham
 436,ham
 437,ham
