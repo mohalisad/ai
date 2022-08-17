@@ -2,7 +2,7 @@ from RandomMinimaxAgent import RandomMinimaxAgent
 from agent import Agent
 from board import Board
 from graphicalBoard import GraphicalBoard
-import time
+
 
 def switchTurn(turn):
     if turn == 'W':
@@ -23,7 +23,6 @@ def play(white, black, board):
         board.changePieceLocation(turn, from_cell, to_cell)
         turn = switchTurn(turn)
         graphicalBoard.showBoard()
-        time.sleep(1)
 
 
 if __name__ == '__main__':
